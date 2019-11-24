@@ -4,8 +4,6 @@ import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 
-import javax.annotation.Nullable;
-
 public class Config
 {
     private static FileConfig config;
@@ -13,19 +11,19 @@ public class Config
     private static final ConfigSpec spec = new ConfigSpec();
 
     static {
-        spec.define("bot.token", "");
-        spec.define("commands.where.enabled", true);
+        spec.define("token", "");
+        spec.define("command.prefix", "!");
+        spec.define("command.owner_id", "");
     }
 
     /**
-     * Returns the value in the config under the given key.
+     * Returns the config instance.
      *
-     * @return value of the key in the config or null if not found
+     * @return config instance
      */
-    @Nullable
-    public static Object get(String key)
+    public static FileConfig getConfig()
     {
-        return config == null ? null : config.get(key);
+        return config;
     }
 
     /**
