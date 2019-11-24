@@ -1,9 +1,8 @@
 plugins {
     id 'java'
+    id 'application'
     id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
-
-apply plugin: 'application'
 
 group = 'me.axieum.discord.traversebot'
 version = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVIS}"
@@ -14,8 +13,13 @@ sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
+    implementation "com.electronwill.night-config:json:${NIGHT_CONFIG_VERSION}"
+    implementation "net.dv8tion:JDA:${JDA_VERSION}"
+    implementation "com.jagrosh:jda-utilities:${JDA_UTILITIES_VERSION}"
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
