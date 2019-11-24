@@ -20,6 +20,7 @@ dependencies {
     implementation "com.electronwill.night-config:json:${NIGHT_CONFIG_VERSION}"
     implementation "net.dv8tion:JDA:${JDA_VERSION}"
     implementation "com.jagrosh:jda-utilities:${JDA_UTILITIES_VERSION}"
+    implementation "pl.allegro.finance:tradukisto:${TRADUKISTO_VERSION}"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

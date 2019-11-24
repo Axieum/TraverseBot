@@ -2,6 +2,7 @@ package me.axieum.discord.traversebot;
 
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import me.axieum.discord.traversebot.command.CommandRoll;
 import me.axieum.discord.traversebot.command.CommandWhoAmI;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
@@ -36,7 +37,8 @@ public class TraverseBot extends ListenerAdapter
         try {
             commands = new CommandClientBuilder().setPrefix(cmdPrefix)
                                                  .setOwnerId(ownerId)
-                                                 .addCommands(new CommandWhoAmI())
+                                                 .addCommands(new CommandWhoAmI(),
+                                                              new CommandRoll())
                                                  .build();
         } catch (IllegalArgumentException e) {
             System.out.println("Could not prepare commands: " + e.getMessage());
