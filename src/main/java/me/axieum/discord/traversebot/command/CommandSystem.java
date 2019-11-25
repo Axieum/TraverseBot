@@ -2,6 +2,7 @@ package me.axieum.discord.traversebot.command;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import me.axieum.discord.traversebot.util.SystemUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
@@ -13,8 +14,6 @@ import java.util.stream.DoubleStream;
 
 public class CommandSystem extends Command
 {
-    private static final SystemInfo SYSTEM_INFO = new SystemInfo();
-
     public CommandSystem()
     {
         this.name = "system";
@@ -28,22 +27,24 @@ public class CommandSystem extends Command
         // Let them know we're working on it
         event.getChannel().sendTyping().queue();
 
+        final SystemInfo system = SystemUtils.getSystemInfo();
+
         // Prepare Discord embed message
         final EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("System Information");
 
         // CPU
-        final CentralProcessor processor = SYSTEM_INFO.getHardware().getProcessor();
+        final CentralProcessor processor = system.getHardware().getProcessor();
         final double loadCpu = processor.getSystemCpuLoadBetweenTicks(processor.getSystemCpuLoadTicks());
-        final double tempCpu = SYSTEM_INFO.getHardware().getSensors().getCpuTemperature();
-        final long uptime = SYSTEM_INFO.getOperatingSystem().getSystemUptime();
+        final double tempCpu = system.getHardware().getSensors().getCpuTemperature();
+        final long uptime = system.getOperatingSystem().getSystemUptime();
 
         embed.addField("Uptime", FormatUtil.formatElapsedSecs(uptime), true);
         embed.addField("CPU Load", loadCpu == 0 ? "N/A" : String.format("%.1f%%", loadCpu * 100), true);
         embed.addField("Temperature", tempCpu == 0 ? "N/A" : String.format("%.1f\u00b0C", tempCpu), true);
 
         // Memory
-        final GlobalMemory memory = SYSTEM_INFO.getHardware().getMemory();
+        final GlobalMemory memory = system.getHardware().getMemory();
         final long totalMem = memory.getTotal();
         final long availMem = memory.getAvailable();
         final long usedMem = totalMem - availMem;
@@ -68,7 +69,7 @@ public class CommandSystem extends Command
                        true);
 
         // Disk (only first found)
-        final OSFileStore filesystem = SYSTEM_INFO.getOperatingSystem().getFileSystem().getFileStores()[0];
+        final OSFileStore filesystem = system.getOperatingSystem().getFileSystem().getFileStores()[0];
         final long totalDsk = filesystem.getTotalSpace();
         final long availDsk = filesystem.getUsableSpace();
         final long usedDsk = totalDsk - availDsk;

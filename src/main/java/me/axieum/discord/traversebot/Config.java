@@ -4,6 +4,9 @@ import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 
+import java.net.URL;
+import java.util.Objects;
+
 public class Config
 {
     private static FileConfig config;
@@ -14,6 +17,8 @@ public class Config
         spec.define("token", "");
         spec.define("command.prefix", "!");
         spec.define("command.owner_id", "");
+        spec.define("minecraft.directory", "/home/minecraft/servers");
+        spec.define("minecraft.selected", "Minecraft");
     }
 
     /**
@@ -33,8 +38,13 @@ public class Config
      */
     public static void load(String path)
     {
+        // Fetch default config resource
+        URL defaultConfig = Config.class.getClassLoader().getResource("config.json");
+        Objects.requireNonNull(defaultConfig);
+
         // Prepare config instance
         config = FileConfig.builder(path)
+                           .defaultData(defaultConfig)
                            .sync()
                            .autosave()
                            .autoreload()
