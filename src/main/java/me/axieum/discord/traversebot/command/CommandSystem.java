@@ -9,6 +9,7 @@ import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
 import oshi.software.os.OSFileStore;
 import oshi.util.FormatUtil;
+import oshi.util.Util;
 
 import java.util.stream.DoubleStream;
 
@@ -35,7 +36,11 @@ public class CommandSystem extends Command
 
         // CPU
         final CentralProcessor processor = system.getHardware().getProcessor();
-        final double loadCpu = processor.getSystemCpuLoadBetweenTicks(processor.getSystemCpuLoadTicks());
+
+        final long[] cpuPrevTicks = processor.getSystemCpuLoadTicks();
+        Util.sleep(1000); // sleep to give time to calculate cpu load
+
+        final double loadCpu = processor.getSystemCpuLoadBetweenTicks(cpuPrevTicks);
         final double tempCpu = system.getHardware().getSensors().getCpuTemperature();
         final long uptime = system.getOperatingSystem().getSystemUptime();
 
