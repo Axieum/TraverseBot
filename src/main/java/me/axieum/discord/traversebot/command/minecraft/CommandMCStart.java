@@ -55,35 +55,38 @@ public class CommandMCStart extends Command
         // Build the process invocation
         try {
             final ProcessBuilder process;
-            final String extension, cli;
+            final File script;
 
             // Determine shell and hence script extension
             OperatingSystem os = SystemUtils.getSystemInfo().getOperatingSystem();
             if (os instanceof WindowsOperatingSystem) {
                 process = new ProcessBuilder("cmd", "/c");
-                extension = ".bat";
-                cli = "\"%s\" > NUL";
+                script = new File(directory, name + ".bat");
             } else if (os instanceof LinuxOperatingSystem) {
                 process = new ProcessBuilder("/bin/bash");
-                extension = ".sh";
-                cli = "%s > /dev/null";
+                script = new File(directory, name + ".sh");
             } else {
                 event.reply(":warning: Unable to start: '**" + os.getFamily() + "**' OS is not supported!");
                 return;
             }
 
             // Fetch and assert server script exists
-            File startScript = new File(directory, name + extension);
-            if (!startScript.exists() || !startScript.isFile()) {
-                System.out.println("Script file: '" + startScript.getAbsolutePath() + "' does not exist!");
+            if (!script.exists() || !script.isFile()) {
+                System.out.println("Script file: '" + script.getAbsolutePath() + "' does not exist!");
                 event.reply(":warning: Unable to find '**" + name + "**' Minecraft server!");
                 return;
             }
 
             // Set process directory, script to execute and ignore stream buffer
             process.directory(directory);
-            process.command().add(String.format(cli, startScript.getAbsolutePath()));
-//            process.command().add('"' + startScript.getAbsolutePath() + '"');
+            if (os instanceof WindowsOperatingSystem) {
+                // Windows is strange, and requires output redirect inline with script
+                process.command().add('"' + script.getAbsolutePath() + "\" > NUL");
+            } else {
+                process.command().add(script.getAbsolutePath());
+                process.command().add("> /dev/null");
+            }
+//            process.command().add(script.getAbsolutePath());
 //            process.command().add(os instanceof WindowsOperatingSystem ? "> NUL" : "> /dev/null");
 
             System.out.printf("Starting process: '%s' from directory '%s'\n",
@@ -91,6 +94,8 @@ public class CommandMCStart extends Command
                               directory.getAbsolutePath());
 
             // Start the process
+//            process.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+//            process.redirectError(ProcessBuilder.Redirect.INHERIT);
             process.start();
             event.reply(":bulb: Starting '**" + name + "**' Minecraft server!");
         } catch (Exception e) {
