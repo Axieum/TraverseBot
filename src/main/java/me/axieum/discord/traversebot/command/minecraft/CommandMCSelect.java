@@ -11,7 +11,7 @@ public class CommandMCSelect extends Command
         this.name = "select";
         this.aliases = new String[]{"switch"};
         this.arguments = "[name]";
-        this.help = "Sets the default Minecraft server to be run";
+        this.help = "Sets or prints the default Minecraft server to be run";
     }
 
     @Override
