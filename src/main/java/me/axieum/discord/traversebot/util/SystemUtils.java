@@ -5,6 +5,8 @@ import oshi.software.os.OSProcess;
 import oshi.software.os.OperatingSystem;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SystemUtils
 {
@@ -30,13 +32,21 @@ public class SystemUtils
      */
     public static OSProcess getOSProcess(String name, String... keywords)
     {
-        final OSProcess[] processes = SYSTEM_INFO.getOperatingSystem().getProcesses(32,
-                                                                                    OperatingSystem.ProcessSort.MEMORY);
-        return Arrays.stream(processes)
-                     .filter(process -> process.getName().toLowerCase().contains(name.toLowerCase()))
-                     .filter(process -> Arrays.stream(keywords)
-                                              .map(String::toLowerCase)
-                                              .anyMatch(process.getCommandLine().toLowerCase()::contains))
+        final OperatingSystem os = SYSTEM_INFO.getOperatingSystem();
+
+        // Transform inputs to lowercase
+        final String target = name.toLowerCase();
+        final List<String> cli = Arrays.stream(keywords).map(String::toLowerCase).collect(Collectors.toList());
+
+        // First, fetch all processes quickly (ignoring "slow" fields/information)
+        return Arrays.stream(os.getProcesses(0, OperatingSystem.ProcessSort.MEMORY, false))
+                     // Filter on processes that match the given name
+                     .filter(process -> process.getName().toLowerCase().contains(target))
+                     // Fetch the process detailed fields/information
+                     .peek(OSProcess::updateAttributes)
+                     // Filter on processes that match one of the cli keywords
+                     .filter(process -> cli.stream().anyMatch(process.getCommandLine().toLowerCase()::contains))
+                     // Return the first process that matches, else null
                      .findFirst()
                      .orElse(null);
     }

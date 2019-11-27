@@ -7,7 +7,6 @@ import me.axieum.discord.traversebot.command.minecraft.CommandMinecraft;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.events.DisconnectEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -64,11 +63,5 @@ public class TraverseBot extends ListenerAdapter
     public void onReady(@Nonnull ReadyEvent event)
     {
         System.out.println("Logged into Discord Bot @" + event.getJDA().getSelfUser().getAsTag());
-    }
-
-    @Override
-    public void onDisconnect(@Nonnull DisconnectEvent event)
-    {
-        System.out.println("Logged out of Discord Bot @" + event.getJDA().getSelfUser().getAsTag());
     }
 }
