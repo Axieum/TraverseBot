@@ -62,18 +62,20 @@ public class CommandMCStart extends Command
             if (os instanceof WindowsOperatingSystem) {
                 process = new ProcessBuilder("cmd", "/c");
                 extension = ".bat";
-                cli = "\"\"%s\" > NUL\"";
+                cli = "\"%s\" > NUL";
             } else if (os instanceof LinuxOperatingSystem) {
                 process = new ProcessBuilder("/bin/bash");
                 extension = ".sh";
-                cli = "\"%s\" > /dev/null";
+                cli = "%s > /dev/null";
             } else {
-                throw new Exception(":warning: Unable to start: '**" + os.getFamily() + "**' OS is not supported!");
+                event.reply(":warning: Unable to start: '**" + os.getFamily() + "**' OS is not supported!");
+                return;
             }
 
             // Fetch and assert server script exists
             File startScript = new File(directory, name + extension);
             if (!startScript.exists() || !startScript.isFile()) {
+                System.out.println("Script file: '" + startScript.getAbsolutePath() + "' does not exist!");
                 event.reply(":warning: Unable to find '**" + name + "**' Minecraft server!");
                 return;
             }
