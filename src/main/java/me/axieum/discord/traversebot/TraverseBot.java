@@ -39,6 +39,7 @@ public class TraverseBot extends ListenerAdapter
         try {
             commands = new CommandClientBuilder().setPrefix(cmdPrefix)
                                                  .setOwnerId(ownerId)
+                                                 .setActivity(null)
                                                  .addCommands(new CommandWhoAmI(),
                                                               new CommandRoll(),
                                                               new CommandInvite(),
