@@ -17,6 +17,9 @@ public class CommandMinecraft extends Command
     @Override
     protected void execute(CommandEvent event)
     {
-        event.reply(":information_source: `!" + this.name + " " + this.arguments + "` - " + this.help);
+        // If an invalid sub-command made it here, simply ignore it
+        // NB: Useful if another bot is made to handle that command
+        if (event.getArgs().isEmpty())
+            event.reply(":information_source: `!" + this.name + " " + this.arguments + "` - " + this.help);
     }
 }
