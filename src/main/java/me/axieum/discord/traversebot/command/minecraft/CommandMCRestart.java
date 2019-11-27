@@ -10,12 +10,13 @@ import oshi.util.Util;
 
 public class CommandMCRestart extends Command
 {
-    CommandMCRestart()
+    public CommandMCRestart()
     {
         this.name = "restart";
         this.aliases = new String[]{"reboot"};
         this.arguments = "[name]";
         this.help = "Restarts a Minecraft server";
+        this.hidden = true;
     }
 
     @Override

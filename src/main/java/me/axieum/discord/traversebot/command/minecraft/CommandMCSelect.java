@@ -6,12 +6,13 @@ import me.axieum.discord.traversebot.Config;
 
 public class CommandMCSelect extends Command
 {
-    CommandMCSelect()
+    public CommandMCSelect()
     {
         this.name = "select";
         this.aliases = new String[]{"switch"};
         this.arguments = "[name]";
         this.help = "Sets or prints the default Minecraft server to be run";
+        this.hidden = true;
     }
 
     @Override

@@ -12,12 +12,13 @@ import java.io.File;
 
 public class CommandMCStart extends Command
 {
-    CommandMCStart()
+    public CommandMCStart()
     {
         this.name = "start";
         this.aliases = new String[]{"boot"};
         this.arguments = "[name]";
         this.help = "Starts a Minecraft server";
+        this.hidden = true;
     }
 
     @Override
