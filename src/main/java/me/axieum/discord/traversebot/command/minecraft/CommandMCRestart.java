@@ -2,6 +2,11 @@ package me.axieum.discord.traversebot.command.minecraft;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import me.axieum.discord.traversebot.Config;
+import me.axieum.discord.traversebot.util.SystemUtils;
+import oshi.software.os.OSProcess;
+import oshi.software.os.OperatingSystem;
+import oshi.util.Util;
 
 public class CommandMCRestart extends Command
 {
@@ -9,12 +14,48 @@ public class CommandMCRestart extends Command
     {
         this.name = "restart";
         this.aliases = new String[]{"reboot"};
-        this.help = "Restarts the Minecraft server";
+        this.arguments = "[name]";
+        this.help = "Restarts a Minecraft server";
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
-        event.reply("You've reached the `restart` command.");
+        // Let them know we're working on it
+        event.getChannel().sendTyping().queue();
+
+        // Fetch server name to match on
+        String name = event.getArgs().isEmpty() ? Config.getConfig().get("minecraft.selected") : event.getArgs();
+        if (name == null || name.isEmpty()) {
+            event.reply(":warning: No default Minecraft server specified!");
+            return;
+        }
+
+        // Is the process already stopped?
+        final OSProcess process = SystemUtils.getOSProcess("java", name);
+
+        if (process == null) {
+            new CommandMCStart().execute(event);
+            return;
+        }
+
+        // Wait for the process to terminate, then start it.
+        // NB: Faster to lookup via PID each time
+        final int pid = process.getProcessID();
+        final OperatingSystem os = SystemUtils.getSystemInfo().getOperatingSystem();
+        new Thread(() -> {
+            // Check every 3 seconds, for 60secs
+            int tries = 0;
+            while (tries++ < 20 && os.getProcess(pid, false) != null) {
+                event.getChannel().sendTyping().queue(); // Keep user informed something is happening
+                Util.sleep(3000);
+            }
+
+            // If the process stopped, off-load to start command, else report failure
+            if (tries <= 20)
+                new CommandMCStart().execute(event);
+            else
+                event.reply(":warning: The Minecraft server '**" + name + "**' didn't stop in time!");
+        }).start();
     }
 }

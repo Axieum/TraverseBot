@@ -27,10 +27,7 @@ public class CommandMCStart extends Command
         event.getChannel().sendTyping().queue();
 
         // Fetch server name and hence script name to start
-        String name = event.getArgs();
-        if (name == null || name.isEmpty())
-            name = Config.getConfig().get("minecraft.selected");
-
+        String name = event.getArgs().isEmpty() ? Config.getConfig().get("minecraft.selected") : event.getArgs();
         if (name == null || name.isEmpty()) {
             event.reply(":warning: No default Minecraft server specified!");
             return;
