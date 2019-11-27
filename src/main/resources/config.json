@@ -1,11 +1,12 @@
 {
-  "minecraft": {
-    "directory": "/home/minecraft/servers",
-    "selected": "Minecraft"
-  },
+  "token": "",
+  "ip": "example.net",
   "command": {
     "prefix": "!",
     "owner_id": ""
   },
-  "token": ""
+  "minecraft": {
+    "directory": "/home/minecraft/servers",
+    "selected": "Minecraft"
+  }
 }

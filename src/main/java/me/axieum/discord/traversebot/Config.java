@@ -15,6 +15,7 @@ public class Config
 
     static {
         spec.define("token", "");
+        spec.define("ip", "");
         spec.define("command.prefix", "!");
         spec.define("command.owner_id", "");
         spec.define("minecraft.directory", "/home/minecraft/servers");

@@ -41,6 +41,7 @@ public class TraverseBot extends ListenerAdapter
                                                               new CommandInvite(),
                                                               new CommandPurge(),
                                                               new CommandSystem(),
+                                                              new CommandIP(),
                                                               new CommandMinecraft())
                                                  .build();
         } catch (IllegalArgumentException e) {
