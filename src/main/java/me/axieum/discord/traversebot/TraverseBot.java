@@ -3,10 +3,7 @@ package me.axieum.discord.traversebot;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import me.axieum.discord.traversebot.command.*;
-import me.axieum.discord.traversebot.command.minecraft.CommandMCRestart;
-import me.axieum.discord.traversebot.command.minecraft.CommandMCSelect;
-import me.axieum.discord.traversebot.command.minecraft.CommandMCStart;
-import me.axieum.discord.traversebot.command.minecraft.CommandMinecraft;
+import me.axieum.discord.traversebot.command.minecraft.*;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -49,6 +46,7 @@ public class TraverseBot extends ListenerAdapter
                                                               new CommandMinecraft(),
                                                               new CommandMCStart(),
                                                               new CommandMCRestart(),
+                                                              new CommandMCForceStop(),
                                                               new CommandMCSelect())
                                                  .build();
         } catch (IllegalArgumentException e) {

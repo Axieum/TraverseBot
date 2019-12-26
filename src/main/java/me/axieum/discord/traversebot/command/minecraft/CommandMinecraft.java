@@ -11,7 +11,10 @@ public class CommandMinecraft extends Command
         this.aliases = new String[]{"mc"};
         this.arguments = "<start|restart|select>";
         this.help = "Manages the Minecraft server";
-        this.children = new Command[]{new CommandMCStart(), new CommandMCRestart(), new CommandMCSelect()};
+        this.children = new Command[]{new CommandMCStart(),
+                                      new CommandMCRestart(),
+                                      new CommandMCForceStop(),
+                                      new CommandMCSelect()};
     }
 
     @Override

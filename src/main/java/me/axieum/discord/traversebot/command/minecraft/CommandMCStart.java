@@ -36,7 +36,7 @@ public class CommandMCStart extends Command
 
         // Is the server already online?
         if (SystemUtils.getOSProcess("java", name) != null) {
-            event.reply(":warning: The Minecraft server '**" + name + "**' is already online!");
+            event.reply(":warning: The '**" + name + "**' Minecraft server is already online!");
             return;
         }
 
@@ -59,7 +59,7 @@ public class CommandMCStart extends Command
             final File script;
 
             // Determine shell and hence script extension
-            OperatingSystem os = SystemUtils.getSystemInfo().getOperatingSystem();
+            final OperatingSystem os = SystemUtils.getSystemInfo().getOperatingSystem();
             if (os instanceof WindowsOperatingSystem) {
                 process = new ProcessBuilder("cmd", "/c");
                 script = new File(directory, name + ".bat");
@@ -101,7 +101,7 @@ public class CommandMCStart extends Command
             event.reply(":bulb: Starting '**" + name + "**' Minecraft server!");
         } catch (Exception e) {
             e.printStackTrace();
-            event.reply(":warning: Unable to start '**" + name + "**'. " + e.getMessage());
+            event.reply(":warning: Unable to start '**" + name + "**' Minecraft server. " + e.getMessage());
         }
     }
 }

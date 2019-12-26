@@ -5,7 +5,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import me.axieum.discord.traversebot.Config;
 import me.axieum.discord.traversebot.util.SystemUtils;
 import oshi.software.os.OSProcess;
-import oshi.software.os.OperatingSystem;
 import oshi.util.Util;
 
 public class CommandMCRestart extends Command
@@ -41,13 +40,10 @@ public class CommandMCRestart extends Command
         }
 
         // Wait for the process to terminate, then start it.
-        // NB: Faster to lookup via PID each time
-        final int pid = process.getProcessID();
-        final OperatingSystem os = SystemUtils.getSystemInfo().getOperatingSystem();
         new Thread(() -> {
             // Check every 3 seconds, for 60secs
             int tries = 0;
-            while (tries++ < 20 && os.getProcess(pid, false) != null) {
+            while (tries++ < 20 && process.updateAttributes(false)) {
                 event.getChannel().sendTyping().queue(); // Keep user informed something is happening
                 Util.sleep(3000);
             }
@@ -56,7 +52,7 @@ public class CommandMCRestart extends Command
             if (tries <= 20)
                 new CommandMCStart().execute(event);
             else
-                event.reply(":warning: The Minecraft server '**" + name + "**' didn't stop in time!");
+                event.reply(":warning: The '**" + name + "**' Minecraft server didn't stop in time!");
         }).start();
     }
 }
