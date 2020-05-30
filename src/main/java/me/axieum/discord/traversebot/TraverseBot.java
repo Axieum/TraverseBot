@@ -56,10 +56,10 @@ public class TraverseBot extends ListenerAdapter
         // Prepare JDA client
         final String token = Config.getConfig().getOrElse("token", "");
         try {
-            api = new JDABuilder(AccountType.BOT).setToken(token)
-                                                 .addEventListeners(new TraverseBot(), commands)
-                                                 .build()
-                                                 .awaitReady();
+            api = JDABuilder.createDefault(token)
+                            .addEventListeners(new TraverseBot(), commands)
+                            .build()
+                            .awaitReady();
         } catch (LoginException | InterruptedException e) {
             System.out.println("Unable to login to Discord Bot: " + e.getMessage());
         }

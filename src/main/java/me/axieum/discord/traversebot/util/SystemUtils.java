@@ -39,15 +39,16 @@ public class SystemUtils
         final List<String> cli = Arrays.stream(keywords).map(String::toLowerCase).collect(Collectors.toList());
 
         // First, fetch all processes quickly (ignoring "slow" fields/information)
-        return Arrays.stream(os.getProcesses(0, OperatingSystem.ProcessSort.MEMORY, false))
-                     // Filter on processes that match the given name
-                     .filter(process -> process.getName().toLowerCase().contains(target))
-                     // Fetch the process detailed fields/information
-                     .peek(OSProcess::updateAttributes)
-                     // Filter on processes that match one of the cli keywords
-                     .filter(process -> cli.stream().anyMatch(process.getCommandLine().toLowerCase()::contains))
-                     // Return the first process that matches, else null
-                     .findFirst()
-                     .orElse(null);
+        return os.getProcesses(0, OperatingSystem.ProcessSort.MEMORY)
+                 .stream()
+                 // Filter on processes that match the given name
+                 .filter(process -> process.getName().toLowerCase().contains(target))
+                 // Fetch the process detailed fields/information
+                 .peek(OSProcess::updateAttributes)
+                 // Filter on processes that match one of the cli keywords
+                 .filter(process -> cli.stream().anyMatch(process.getCommandLine().toLowerCase()::contains))
+                 // Return the first process that matches, else null
+                 .findFirst()
+                 .orElse(null);
     }
 }

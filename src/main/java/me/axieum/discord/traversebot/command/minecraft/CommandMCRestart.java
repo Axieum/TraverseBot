@@ -43,7 +43,7 @@ public class CommandMCRestart extends Command
         new Thread(() -> {
             // Check every 3 seconds, for 60secs
             int tries = 0;
-            while (tries++ < 20 && process.updateAttributes(false)) {
+            while (tries++ < 20 && process.updateAttributes()) {
                 event.getChannel().sendTyping().queue(); // Keep user informed something is happening
                 Util.sleep(3000);
             }

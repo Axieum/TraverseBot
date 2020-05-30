@@ -74,7 +74,7 @@ public class CommandSystem extends Command
                        true);
 
         // Disk (only first found)
-        final OSFileStore filesystem = system.getOperatingSystem().getFileSystem().getFileStores()[0];
+        final OSFileStore filesystem = system.getOperatingSystem().getFileSystem().getFileStores().get(0);
         final long totalDsk = filesystem.getTotalSpace();
         final long availDsk = filesystem.getUsableSpace();
         final long usedDsk = totalDsk - availDsk;
