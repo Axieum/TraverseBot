@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import me.axieum.discord.traversebot.command.*;
 import me.axieum.discord.traversebot.command.minecraft.*;
-import net.dv8tion.jda.api.AccountType;
+import me.axieum.discord.traversebot.misc.minecraft.MinecraftNews;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -69,5 +69,18 @@ public class TraverseBot extends ListenerAdapter
     public void onReady(@Nonnull ReadyEvent event)
     {
         System.out.println("Logged into Discord Bot @" + event.getJDA().getSelfUser().getAsTag());
+
+        // Kick off the Minecraft News feed watcher
+        MinecraftNews.init(event.getJDA());
+    }
+
+    /**
+     * Returns the underlying Discord JDA API client.
+     *
+     * @return JDA client
+     */
+    public static JDA getDiscord()
+    {
+        return api;
     }
 }

@@ -14,12 +14,22 @@ public class Config
     private static final ConfigSpec spec = new ConfigSpec();
 
     static {
+        // General
         spec.define("token", "");
         spec.define("ip", "");
         spec.define("command.prefix", "!");
         spec.define("command.owner_id", "");
+
+        // Minecraft
         spec.define("minecraft.directory", "/home/minecraft/servers");
         spec.define("minecraft.selected", "Minecraft");
+        spec.define("minecraft.news.channel", -1L);
+        spec.define("minecraft.news.frequency", 60);
+        spec.define("minecraft.news.color", 1484079);
+        spec.define("minecraft.news.tags", new String[]{"News", "Minecraft Builds"});
+        spec.define("minecraft.news.author.name", "Minecraft News");
+        spec.define("minecraft.news.author.url", "");
+        spec.define("minecraft.news.author.icon", "");
     }
 
     /**

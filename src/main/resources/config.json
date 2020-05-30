@@ -7,6 +7,19 @@
   },
   "minecraft": {
     "directory": "/home/minecraft/servers",
-    "selected": "Minecraft"
+    "selected": "Minecraft",
+    "news": {
+      "frequency": 60,
+      "channel": -1,
+      "color": 1484079,
+      "author": {
+        "name": "Minecraft News",
+        "url": "https://minecraft.net",
+        "icon": "https://minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon-96x96.png"
+      },
+      "tags": [
+        "News"
+      ]
+    }
   }
 }
