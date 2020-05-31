@@ -3,6 +3,7 @@ package me.axieum.discord.traversebot;
 import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.net.URL;
 import java.util.Objects;
@@ -23,10 +24,12 @@ public class Config
         // Minecraft
         spec.define("minecraft.directory", "/home/minecraft/servers");
         spec.define("minecraft.selected", "Minecraft");
+
         spec.define("minecraft.news.channel", -1L);
         spec.define("minecraft.news.frequency", 60);
         spec.define("minecraft.news.color", 1484079);
         spec.define("minecraft.news.tags", new String[]{"News", "Minecraft Builds"});
+        spec.define("minecraft.news.extract_length", 300, i -> (int) i < MessageEmbed.TEXT_MAX_LENGTH);
         spec.define("minecraft.news.author.name", "Minecraft News");
         spec.define("minecraft.news.author.url", "");
         spec.define("minecraft.news.author.icon", "");

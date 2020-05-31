@@ -3,7 +3,9 @@ package me.axieum.discord.traversebot.misc.minecraft;
 import me.axieum.discord.traversebot.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.apache.commons.text.WordUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -109,7 +111,6 @@ public class MinecraftNews extends TimerTask
         }
 
         // Wrap-up, remember the time we last fetched articles
-        System.out.println("Finished pushing Minecraft news articles to Discord!");
         System.out.printf("Scheduled to check for more Minecraft news articles in %d minutes\n",
                           Config.getConfig().getInt("minecraft.news.frequency"));
         this.since = LocalDateTime.now();
@@ -130,19 +131,28 @@ public class MinecraftNews extends TimerTask
         final String imageUrl = MINECRAFT_BASE_URL + element.selectFirst("imageurl").ownText();
         final LocalDateTime publishDate = LocalDateTime.parse(element.selectFirst("pubdate").ownText(), DATE_FORMATTER);
 
-        // Web-scrap further metadata
+        // Web-scrape further metadata
         final String title, extract, author, avatarUrl;
         try {
             System.out.printf("Scraping article content from %s\n", link);
             final Document document = Jsoup.connect(link).get();
-            final Element attribution = document.selectFirst(".article-attribution-container");
 
+            // Title and body
             title = document.selectFirst("h1").ownText();
-            extract = document.selectFirst(".text").text().substring(0, 150) + "...";
-            author = attribution.selectFirst(".attribution__details dd").ownText();
+            extract = WordUtils.abbreviate(document.selectFirst(".text").text(),
+                                           Config.getConfig().getInt("minecraft.news.extract_length"),
+                                           MessageEmbed.TEXT_MAX_LENGTH,
+                                           "...");
 
-            final Element avatarEle = attribution.selectFirst(".attribution__avatar img");
-            avatarUrl = avatarEle != null ? MINECRAFT_BASE_URL + avatarEle.attr("src") : null;
+            // Author
+            final Element attribution = document.selectFirst(".article-attribution-container");
+            if (attribution != null) {
+                author = attribution.selectFirst(".attribution__details dd").ownText();
+                final Element avatarEle = attribution.selectFirst(".attribution__avatar img");
+                avatarUrl = avatarEle != null ? MINECRAFT_BASE_URL + avatarEle.attr("src") : null;
+            } else {
+                author = avatarUrl = null;
+            }
         } catch (IOException e) {
             System.err.printf("Unable to scrape article contents: %s\n", e.getMessage());
             e.printStackTrace();

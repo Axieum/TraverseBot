@@ -12,6 +12,7 @@
       "frequency": 60,
       "channel": -1,
       "color": 1484079,
+      "extract_length": 300,
       "author": {
         "name": "Minecraft News",
         "url": "https://minecraft.net",
