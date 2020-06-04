@@ -28,7 +28,7 @@ public class Config
         spec.define("minecraft.news.channel", -1L);
         spec.define("minecraft.news.frequency", 60);
         spec.define("minecraft.news.color", 1484079);
-        spec.define("minecraft.news.tags", new String[]{"News", "Minecraft Builds"});
+        spec.define("minecraft.news.tags", new String[]{"News", "Deep Dives", "Minecraft Builds"});
         spec.define("minecraft.news.extract_length", 300, i -> (int) i < MessageEmbed.TEXT_MAX_LENGTH);
         spec.define("minecraft.news.author.name", "Minecraft News");
         spec.define("minecraft.news.author.url", "");
