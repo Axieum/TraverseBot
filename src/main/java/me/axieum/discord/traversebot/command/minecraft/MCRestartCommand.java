@@ -7,9 +7,9 @@ import me.axieum.discord.traversebot.util.SystemUtils;
 import oshi.software.os.OSProcess;
 import oshi.util.Util;
 
-public class CommandMCRestart extends Command
+public class MCRestartCommand extends Command
 {
-    public CommandMCRestart()
+    public MCRestartCommand()
     {
         this.name = "restart";
         this.aliases = new String[]{"reboot"};
@@ -35,7 +35,7 @@ public class CommandMCRestart extends Command
         final OSProcess process = SystemUtils.getOSProcess("java", name);
 
         if (process == null) {
-            new CommandMCStart().execute(event);
+            new MCStartCommand().execute(event);
             return;
         }
 
@@ -50,7 +50,7 @@ public class CommandMCRestart extends Command
 
             // If the process stopped, off-load to start command, else report failure
             if (tries <= 20)
-                new CommandMCStart().execute(event);
+                new MCStartCommand().execute(event);
             else
                 event.reply(":warning: The '**" + name + "**' Minecraft server didn't stop in time!");
         }).start();

@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.commons.text.WordUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.internal.StringUtil;
 import org.jsoup.nodes.Document;
@@ -23,6 +25,7 @@ import java.util.regex.Pattern;
 
 public class MinecraftNews extends TimerTask
 {
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final Timer TIMER = new Timer("MinecraftNews");
     private static final String MINECRAFT_RSS_URL = "https://minecraft.net/en-us/feeds/community-content/rss";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("E, d MMM y H:m:s Z");
@@ -63,14 +66,14 @@ public class MinecraftNews extends TimerTask
         // Fetch server channel (if specified) to publish news items to
         long channelId = Config.getConfig().get("minecraft.news.channel");
         if (channelId < 0) {
-            System.out.println("Skip fetching Minecraft news articles");
+            LOGGER.info("Skip fetching Minecraft news articles");
             return;
         }
 
         // Fetch Discord channel
         TextChannel channel = discord.getTextChannelById(channelId);
         if (channel == null) {
-            System.err.printf("Cannot push Minecraft news articles to the channel with id %s\n", channelId);
+            LOGGER.error("Cannot push Minecraft news articles to the channel with id {}", channelId);
             return;
         }
 
@@ -82,7 +85,7 @@ public class MinecraftNews extends TimerTask
 
         try {
             // Load the RSS feed
-            System.out.println("Checking for new Minecraft news articles...");
+            LOGGER.info("Checking for new Minecraft news articles...");
             Jsoup.connect(MINECRAFT_RSS_URL)
                  .get()
                  // Pluck article items
@@ -106,13 +109,12 @@ public class MinecraftNews extends TimerTask
                  // Push filtered articles
                  .forEach(element -> pushArticle(channel, element));
         } catch (IOException e) {
-            System.err.printf("Unable to fetch the Minecraft news feed: %s\n", e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("Unable to fetch the Minecraft news feed!", e);
         }
 
         // Wrap-up, remember the time we last fetched articles
-        System.out.printf("Scheduled to check for more Minecraft news articles in %d minutes\n",
-                          Config.getConfig().getInt("minecraft.news.frequency"));
+        LOGGER.info("Scheduled to check for more Minecraft news articles in {} minutes",
+                    Config.getConfig().getInt("minecraft.news.frequency"));
         this.since = ZonedDateTime.now();
     }
 
@@ -134,7 +136,7 @@ public class MinecraftNews extends TimerTask
         // Web-scrape further metadata
         final String title, extract, author, avatarUrl;
         try {
-            System.out.printf("Scraping article content from %s\n", link);
+            LOGGER.debug("Scraping article content from {}", link);
             final Document document = Jsoup.connect(link).get();
 
             // Title and body
@@ -154,8 +156,7 @@ public class MinecraftNews extends TimerTask
                 author = avatarUrl = null;
             }
         } catch (IOException e) {
-            System.err.printf("Unable to scrape article contents: %s\n", e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("Unable to scrape article contents!", e);
             return;
         }
 
@@ -177,7 +178,7 @@ public class MinecraftNews extends TimerTask
                                                .setTimestamp(publishDate);
 
         // Push the article embedding!
-        System.out.printf("Pushing article to Discord: %s\n", title);
+        LOGGER.info("Pushing article to Discord: {}", title);
         channel.sendMessage(embed.build()).queue();
     }
 }

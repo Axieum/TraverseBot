@@ -4,9 +4,9 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import pl.allegro.finance.tradukisto.ValueConverters;
 
-public class CommandRoll extends Command
+public class RollCommand extends Command
 {
-    public CommandRoll()
+    public RollCommand()
     {
         this.name = "roll";
         this.help = "Roll some dice - settle a decision";

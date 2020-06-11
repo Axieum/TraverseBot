@@ -4,15 +4,19 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import me.axieum.discord.traversebot.Config;
 import me.axieum.discord.traversebot.util.SystemUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oshi.software.os.OperatingSystem;
 import oshi.software.os.linux.LinuxOperatingSystem;
 import oshi.software.os.windows.WindowsOperatingSystem;
 
 import java.io.File;
 
-public class CommandMCStart extends Command
+public class MCStartCommand extends Command
 {
-    public CommandMCStart()
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    public MCStartCommand()
     {
         this.name = "start";
         this.aliases = new String[]{"boot"};
@@ -73,7 +77,7 @@ public class CommandMCStart extends Command
 
             // Fetch and assert server script exists
             if (!script.exists() || !script.isFile()) {
-                System.out.println("Script file: '" + script.getAbsolutePath() + "' does not exist!");
+                LOGGER.warn("Script file: '" + script.getAbsolutePath() + "' does not exist!");
                 event.reply(":warning: Unable to find '**" + name + "**' Minecraft server!");
                 return;
             }
@@ -90,9 +94,9 @@ public class CommandMCStart extends Command
 //            process.command().add(script.getAbsolutePath());
 //            process.command().add(os instanceof WindowsOperatingSystem ? "> NUL" : "> /dev/null");
 
-            System.out.printf("Starting process: '%s' from directory '%s'\n",
-                              String.join(" ", process.command()),
-                              directory.getAbsolutePath());
+            LOGGER.info("Starting process: '{}' from directory '{}'",
+                        String.join(" ", process.command()),
+                        directory.getAbsolutePath());
 
             // Start the process
 //            process.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -100,7 +104,7 @@ public class CommandMCStart extends Command
             process.start();
             event.reply(":bulb: Starting '**" + name + "**' Minecraft server!");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Unable to start Minecraft server", e);
             event.reply(":warning: Unable to start '**" + name + "**' Minecraft server. " + e.getMessage());
         }
     }

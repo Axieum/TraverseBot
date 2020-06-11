@@ -13,9 +13,9 @@ import oshi.util.Util;
 
 import java.util.stream.DoubleStream;
 
-public class CommandSystem extends Command
+public class SystemCommand extends Command
 {
-    public CommandSystem()
+    public SystemCommand()
     {
         this.name = "system";
         this.aliases = new String[]{"sys"};

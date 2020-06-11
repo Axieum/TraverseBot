@@ -3,18 +3,18 @@ package me.axieum.discord.traversebot.command.minecraft;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-public class CommandMinecraft extends Command
+public class MinecraftCommand extends Command
 {
-    public CommandMinecraft()
+    public MinecraftCommand()
     {
         this.name = "minecraft";
         this.aliases = new String[]{"mc"};
         this.arguments = "<start|restart|select>";
         this.help = "Manages the Minecraft server";
-        this.children = new Command[]{new CommandMCStart(),
-                                      new CommandMCRestart(),
-                                      new CommandMCForceStop(),
-                                      new CommandMCSelect()};
+        this.children = new Command[]{new MCStartCommand(),
+                                      new MCRestartCommand(),
+                                      new MCForceStopCommand(),
+                                      new MCSelectCommand()};
     }
 
     @Override

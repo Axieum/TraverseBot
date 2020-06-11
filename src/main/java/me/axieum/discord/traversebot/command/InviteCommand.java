@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.Invite;
 
 import java.util.Optional;
 
-public class CommandInvite extends Command
+public class InviteCommand extends Command
 {
-    public CommandInvite()
+    public InviteCommand()
     {
         this.name = "invite";
         this.aliases = new String[]{"invitation"};

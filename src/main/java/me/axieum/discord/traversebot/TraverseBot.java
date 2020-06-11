@@ -9,12 +9,15 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 
 public class TraverseBot extends ListenerAdapter
 {
+    private static final Logger LOGGER = LogManager.getLogger();
     private static JDA api;
     private static CommandClient commands;
 
@@ -25,7 +28,7 @@ public class TraverseBot extends ListenerAdapter
      */
     public static void main(String[] args)
     {
-        System.out.println("Traverse Bot starting...");
+        LOGGER.info("Traverse Bot starting...");
 
         // Initialise configuration
         Config.load("./config.json");
@@ -37,20 +40,20 @@ public class TraverseBot extends ListenerAdapter
             commands = new CommandClientBuilder().setPrefix(cmdPrefix)
                                                  .setOwnerId(ownerId)
                                                  .setActivity(null)
-                                                 .addCommands(new CommandWhoAmI(),
-                                                              new CommandRoll(),
-                                                              new CommandInvite(),
-                                                              new CommandPurge(),
-                                                              new CommandSystem(),
-                                                              new CommandIP(),
-                                                              new CommandMinecraft(),
-                                                              new CommandMCStart(),
-                                                              new CommandMCRestart(),
-                                                              new CommandMCForceStop(),
-                                                              new CommandMCSelect())
+                                                 .addCommands(new WhoAmICommand(),
+                                                              new RollCommand(),
+                                                              new InviteCommand(),
+                                                              new PurgeCommand(),
+                                                              new SystemCommand(),
+                                                              new IPCommand(),
+                                                              new MinecraftCommand(),
+                                                              new MCStartCommand(),
+                                                              new MCRestartCommand(),
+                                                              new MCForceStopCommand(),
+                                                              new MCSelectCommand())
                                                  .build();
         } catch (IllegalArgumentException e) {
-            System.out.println("Could not prepare commands: " + e.getMessage());
+            LOGGER.warn("Could not prepare commands: {}", e.getMessage());
         }
 
         // Prepare JDA client
@@ -61,14 +64,14 @@ public class TraverseBot extends ListenerAdapter
                             .build()
                             .awaitReady();
         } catch (LoginException | InterruptedException e) {
-            System.out.println("Unable to login to Discord Bot: " + e.getMessage());
+            LOGGER.error("Unable to login to Discord Bot: {}", e.getMessage());
         }
     }
 
     @Override
     public void onReady(@Nonnull ReadyEvent event)
     {
-        System.out.println("Logged into Discord Bot @" + event.getJDA().getSelfUser().getAsTag());
+        LOGGER.info("Logged into Discord Bot @{}", event.getJDA().getSelfUser().getAsTag());
 
         // Kick off the Minecraft News feed watcher
         MinecraftNews.init(event.getJDA());

@@ -3,9 +3,9 @@ package me.axieum.discord.traversebot.command;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-public class CommandWhoAmI extends Command
+public class WhoAmICommand extends Command
 {
-    public CommandWhoAmI()
+    public WhoAmICommand()
     {
         this.name = "whereami";
         this.aliases = new String[]{"whoami"};

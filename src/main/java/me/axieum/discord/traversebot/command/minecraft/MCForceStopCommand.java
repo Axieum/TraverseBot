@@ -5,15 +5,19 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import me.axieum.discord.traversebot.Config;
 import me.axieum.discord.traversebot.util.SystemUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import oshi.software.os.OSProcess;
 import oshi.software.os.windows.WindowsOperatingSystem;
 import oshi.util.Util;
 
 import java.io.IOException;
 
-public class CommandMCForceStop extends Command
+public class MCForceStopCommand extends Command
 {
-    public CommandMCForceStop()
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    public MCForceStopCommand()
     {
         this.name = "forcestop";
         this.arguments = "[name]";
@@ -51,7 +55,7 @@ public class CommandMCForceStop extends Command
         else
             killCmd = String.format("kill -9 %d", pid);
 
-        System.out.printf("Terminating process with PID '%d' via: '%s'\n", pid, killCmd);
+        LOGGER.info("Terminating process with PID '{}' via: '{}'", pid, killCmd);
 
         new Thread(() -> {
             // Try to terminate every 3 seconds, for 60secs
@@ -61,7 +65,7 @@ public class CommandMCForceStop extends Command
                     event.getChannel().sendTyping().queue(); // Keep user informed something is happening
                     Runtime.getRuntime().exec(killCmd);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Unable to terminate process!", e);
                 } finally {
                     Util.sleep(3000);
                 }

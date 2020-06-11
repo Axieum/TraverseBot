@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.concurrent.TimeUnit;
 
-public class CommandPurge extends Command
+public class PurgeCommand extends Command
 {
-    public CommandPurge()
+    public PurgeCommand()
     {
         this.name = "purge";
         this.aliases = new String[]{"clear"};

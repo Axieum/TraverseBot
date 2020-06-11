@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-public class CommandIP extends Command
+public class IPCommand extends Command
 {
-    public CommandIP()
+    public IPCommand()
     {
         this.name = "ip";
         this.arguments = "[raw]";

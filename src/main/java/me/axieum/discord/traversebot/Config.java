@@ -4,12 +4,15 @@ import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.util.Objects;
 
 public class Config
 {
+    private static final Logger LOGGER = LogManager.getLogger();
     private static FileConfig config;
 
     private static final ConfigSpec spec = new ConfigSpec();
@@ -69,6 +72,6 @@ public class Config
         config.load();
         spec.correct(config);
 
-        System.out.println("Successfully loaded configuration!");
+        LOGGER.info("Successfully loaded configuration!");
     }
 }

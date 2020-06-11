@@ -4,9 +4,9 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import me.axieum.discord.traversebot.Config;
 
-public class CommandMCSelect extends Command
+public class MCSelectCommand extends Command
 {
-    public CommandMCSelect()
+    public MCSelectCommand()
     {
         this.name = "select";
         this.aliases = new String[]{"switch"};
