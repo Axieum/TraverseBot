@@ -7,12 +7,13 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.commons.text.WordUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.internal.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Timer;
@@ -23,12 +24,11 @@ import java.util.regex.Pattern;
 public class MinecraftNews extends TimerTask
 {
     private static final Timer TIMER = new Timer("MinecraftNews");
-    private static final String MINECRAFT_BASE_URL = "https://minecraft.net/";
     private static final String MINECRAFT_RSS_URL = "https://minecraft.net/en-us/feeds/community-content/rss";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("E, d MMM y H:m:s Z");
 
     private final JDA discord;
-    private LocalDateTime since = LocalDateTime.now().minusDays(1);
+    private ZonedDateTime since = ZonedDateTime.now().minusDays(1);
 
     /**
      * Initialises and begins the Minecraft News task.
@@ -98,7 +98,7 @@ public class MinecraftNews extends TimerTask
                      try {
                          final Element pubDateEl = element.selectFirst("pubdate");
                          return pubDateEl != null &&
-                                LocalDateTime.parse(pubDateEl.ownText(), DATE_FORMATTER).isAfter(since);
+                                ZonedDateTime.parse(pubDateEl.ownText(), DATE_FORMATTER).isAfter(since);
                      } catch (DateTimeParseException e) {
                          return false;
                      }
@@ -113,7 +113,7 @@ public class MinecraftNews extends TimerTask
         // Wrap-up, remember the time we last fetched articles
         System.out.printf("Scheduled to check for more Minecraft news articles in %d minutes\n",
                           Config.getConfig().getInt("minecraft.news.frequency"));
-        this.since = LocalDateTime.now();
+        this.since = ZonedDateTime.now();
     }
 
     /**
@@ -128,8 +128,8 @@ public class MinecraftNews extends TimerTask
 //        final String title = element.selectFirst("title").ownText();
         final String link = element.selectFirst("link").ownText();
 //        final String description = element.selectFirst("description").ownText();
-        final String imageUrl = MINECRAFT_BASE_URL + element.selectFirst("imageurl").ownText();
-        final LocalDateTime publishDate = LocalDateTime.parse(element.selectFirst("pubdate").ownText(), DATE_FORMATTER);
+        final String imageUrl = StringUtil.resolve(element.baseUri(), element.selectFirst("imageurl").ownText());
+        final ZonedDateTime publishDate = ZonedDateTime.parse(element.selectFirst("pubdate").ownText(), DATE_FORMATTER);
 
         // Web-scrape further metadata
         final String title, extract, author, avatarUrl;
@@ -149,7 +149,7 @@ public class MinecraftNews extends TimerTask
             if (attribution != null) {
                 author = attribution.selectFirst(".attribution__details dd").ownText();
                 final Element avatarEle = attribution.selectFirst(".attribution__avatar img");
-                avatarUrl = avatarEle != null ? MINECRAFT_BASE_URL + avatarEle.attr("src") : null;
+                avatarUrl = avatarEle != null ? avatarEle.attr("abs:src") : null;
             } else {
                 author = avatarUrl = null;
             }
